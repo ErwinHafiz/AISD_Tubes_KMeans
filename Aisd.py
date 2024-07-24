@@ -89,7 +89,7 @@ with col2:
 
 st.title("Penerapan algoritma K-Means pada dataset diabetes.xlsx")
 
-tab1, tab2 = st.tabs(["Static data Kmeans", "Input data"])
+tab1, tab2 = st.tabs(["Static Kmeans", "Customize Kluster"])
 
 
 
@@ -173,21 +173,28 @@ with tab1:
   
 
 with tab2:
-    st.subheader("Input Data for Clustering")
+    st.subheader("Masukkan jumlah klaster yang diinginkan")
+    k = st.number_input("Jumlah klaster", min_value=1, value=3, step=1)
 
-    # Allow users to input new data
-    new_data = {}
-    for col in feature:
-        new_data[col] = st.number_input(f"Input {col}", value=0)
+    st.write("Jumlah klaster yang dipilih:", k)
 
-    new_data = pd.DataFrame([new_data])
-    st.write("New Data:", new_data)
+    if st.button("Mulai K-Means Clustering"):
+        st.subheader("Tahapan 1: Standarisasi data ")
+        st.write(data_standarized)
+        st.write("Gambaran awal dari data standarisasi")
+        st.write(data_standarized.describe())
 
-    if st.button("Cluster New Data"):
-        new_data_standarized = standarized_data(new_data)
-
-        k = 3
+        st.subheader(f"Tahapan 2: Inisialisasi random centroid berdasarkan kolom masing - masing dan penentuan klaster = {k}")
         centroids = random_centroids(data_standarized, k)
+        st.write(centroids)
+
+        st.subheader("Tahapan 3: Penentuan jarak dan label")
+        labels = get_labels(data_standarized, centroids)
+        st.write(labels)
+        st.write(labels.value_counts())
+
+        st.subheader("Tahapan 4: Perubahan titik tengah dari centroid baru sampai sama dengan centroid lama")
+        max_iteration = 100
         old_centroids = pd.DataFrame()
         iteration = 1
 
@@ -195,21 +202,21 @@ with tab2:
             st.write(f"Iterasi: {iteration}")
             old_centroids = centroids
 
-            labels = get_labels(data_standarized.append(new_data_standarized), centroids)
-            centroids = new_centroids(data_standarized.append(new_data_standarized), labels, k)
+            labels = get_labels(data_standarized, centroids)
+            centroids = new_centroids(data_standarized, labels, k)
 
-            plot_clusters(data_standarized.append(new_data_standarized), labels, centroids, iteration)
+            plot_clusters(data_standarized, labels, centroids, iteration)
             iteration += 1
 
+        st.write(old_centroids)
         st.write("Proses clustering selesai.")
-        st.pyplot(plot_clusters(data_standarized.append(new_data_standarized), labels, centroids, iteration))
+        st.pyplot(plot_clusters(data_standarized, labels, centroids, iteration))
 
-        st.subheader("Hasil cluster akhir")
+        st.subheader("Hasil cluster akhir ")
         st.write(centroids)
 
         st.write("Perbandingan jika menggunakan library kmeans")
-        kmeans = KMeans(3)
-        kmeans.fit(data_standarized.append(new_data_standarized))
+        kmeans = KMeans(k)
+        kmeans.fit(data_standarized)
         centroids = kmeans.cluster_centers_
-
         st.write(pd.DataFrame(centroids, columns=feature).T)
