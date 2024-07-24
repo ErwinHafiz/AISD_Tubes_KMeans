@@ -146,6 +146,7 @@ with tab1:
   centroids = random_centroids(data_standarized, k)
   old_centroids = pd.DataFrame()
   iteration = 1
+  st.write(old_centroids)
 
   while iteration < max_iteration and not centroids.equals(old_centroids):
     st.write(f"Iterasi: {iteration}")
@@ -157,6 +158,7 @@ with tab1:
     plot_clusters(data_standarized, labels, centroids, iteration)
     iteration += 1
 
+  st.write(old_centroids)
 
   st.write("Proses clustering selesai.")
   st.pyplot(plot_clusters(data_standarized, labels, centroids, iteration))
