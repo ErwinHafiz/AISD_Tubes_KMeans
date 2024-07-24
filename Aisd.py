@@ -66,7 +66,7 @@ def plot_clusters(data, labels, centroids, iteration):
     plt.scatter(x=centroids_2d[:, 0], y=centroids_2d[:, 1], marker='x', color='red')
     st.pyplot(plt)
 
-st.title("Kelompok 0 AISD-7:")
+st.title("Kelompok Algoritma K-Means Kasus Diabetes AISD-7:")
 st.write("")
 
 col1, col2 = st.columns([1,2])
@@ -172,5 +172,44 @@ with tab1:
   st.write(pd.DataFrame(centroids,columns=feature).T)
   
 
-with tab2 :
-  st.title("Ehe")
+with tab2:
+    st.subheader("Input Data for Clustering")
+
+    # Allow users to input new data
+    new_data = {}
+    for col in feature:
+        new_data[col] = st.number_input(f"Input {col}", value=0)
+
+    new_data = pd.DataFrame([new_data])
+    st.write("New Data:", new_data)
+
+    if st.button("Cluster New Data"):
+        new_data_standarized = standarized_data(new_data)
+
+        k = 3
+        centroids = random_centroids(data_standarized, k)
+        old_centroids = pd.DataFrame()
+        iteration = 1
+
+        while iteration < max_iteration and not centroids.equals(old_centroids):
+            st.write(f"Iterasi: {iteration}")
+            old_centroids = centroids
+
+            labels = get_labels(data_standarized.append(new_data_standarized), centroids)
+            centroids = new_centroids(data_standarized.append(new_data_standarized), labels, k)
+
+            plot_clusters(data_standarized.append(new_data_standarized), labels, centroids, iteration)
+            iteration += 1
+
+        st.write("Proses clustering selesai.")
+        st.pyplot(plot_clusters(data_standarized.append(new_data_standarized), labels, centroids, iteration))
+
+        st.subheader("Hasil cluster akhir")
+        st.write(centroids)
+
+        st.write("Perbandingan jika menggunakan library kmeans")
+        kmeans = KMeans(3)
+        kmeans.fit(data_standarized.append(new_data_standarized))
+        centroids = kmeans.cluster_centers_
+
+        st.write(pd.DataFrame(centroids, columns=feature).T)
