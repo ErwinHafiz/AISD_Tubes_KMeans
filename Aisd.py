@@ -54,15 +54,16 @@ def new_centroids(data, labels, k):
 
 
 # display data 
-def plot_clusters ( data, labels, centroids, iteration):
-  pca = PCA(n_components = 2)
-  data_2d = pca.fit_transform(data)
-  centroids_2d = pca.transform(centroids.T)
-  clear_output(wait = True)
-  plt.title(f'Iteration {iteration}')
-  plt.scatter(x=data_2d[:,0], y= data_2d[:,1], c=labels)
-  plt.scatter(x=centroids_2d[:,0], y= centroids_2d[:,1])
-  plt.show()
+def plot_clusters(data, labels, centroids, iteration):
+    pca = PCA(n_components=2)
+    data_2d = pca.fit_transform(data)
+    centroids_2d = pca.transform(centroids.T)
+    
+    plt.figure()
+    plt.title(f'Iteration {iteration}')
+    plt.scatter(x=data_2d[:, 0], y=data_2d[:, 1], c=labels)
+    plt.scatter(x=centroids_2d[:, 0], y=centroids_2d[:, 1], marker='x', color='red')
+    st.pyplot(plt)
 
 st.title("Kelompok 0 AISD-7:")
 st.write("")
