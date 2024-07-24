@@ -55,6 +55,7 @@ def new_centroids(data, labels, k):
 
 # display data 
 def plot_clusters(data, labels, centroids, iteration):
+    st.set_option('deprecation.showPyplotGlobalUse', False)
     pca = PCA(n_components=2)
     data_2d = pca.fit_transform(data)
     centroids_2d = pca.transform(centroids.T)
@@ -109,11 +110,6 @@ with tab1:
 
 
 
-  # st.write("Tahapan: 4.update centroid")
-  # st.write("Tahapan: 5.repeat 3-4 until stop")
-  # st.write("Tahapan 2: Initialize random centroid")
-
-# Tahapan input data, menentukan centroid, menentukan jarak, mengupdate centroid .repeat
   st.write("Tahapan Penerapan K-Means: ")
   st.write("1. Standarisasi data")
   st.write("2. Inisialisasi random centroid berdasarkan kolom masing - masing dan penentuan jumlah klaster")
@@ -164,7 +160,7 @@ with tab1:
   st.write("Proses clustering selesai.")
   st.pyplot(plot_clusters(data_standarized, labels, centroids, iteration))
 
-  st.subheader("hasil centroid akhir ")
+  st.subheader("hasil cluster akhir ")
   st.write(centroids)
     
   st.write("Perbandingan jika menggunakan library kmeans")
