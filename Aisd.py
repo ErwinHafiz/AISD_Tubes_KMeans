@@ -30,12 +30,12 @@ data_standarized = standarized_data(data_select)
 def random_centroids(data, k):
   centroids = []
   for i in range (k):
-    # tes sini datastandarize from dataselect
     centroid = data_standarized.apply(lambda x: float(x.sample()))
     st.write("random centroid untuk klaster ke -",i,":",centroid)
     centroids.append(centroid)
   st.write("Hasil centroid untuk masing - masing klaster :")
-  return pd.concat(centroids, axis = 1 )
+  result =  pd.concat(centroids, axis = 1 )
+  return result
 
 
 # def get labels distancte fungsi penentuan jarak dan pemberian label 
@@ -81,7 +81,7 @@ with col1:
 with col2: 
   st.write("**Nama**")
   st.write("Erwin Hafiz Triadi")
-  st.write("Farid Xiaopang")
+  st.write("Muhammad Farid Nurrahman ")
   st.write("Muhammad Pradipta Waskitha")
   st.write("Fikkry Ihza Fachrezi")
 
@@ -143,7 +143,7 @@ with tab1:
   centroids = random_centroids(data_standarized, k)
   old_centroids = pd.DataFrame()
   iteration = 1
-  st.write(old_centroids)
+  # st.write(old_centroids)
 
   while iteration < max_iteration and not centroids.equals(old_centroids):
     st.write(f"Iterasi: {iteration}")
