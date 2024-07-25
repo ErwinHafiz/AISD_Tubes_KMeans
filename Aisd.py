@@ -43,11 +43,12 @@ def get_labels (data,centroids):
   distances = centroids.apply(lambda x: np.sqrt(((data - x) ** 2 ).sum(axis = 1)))
   st.write("**Jarak Item & Label Klaster**")
   st.write(distances)
-  st.write("Penentuan Label Kluster :")
   return distances.idxmin(axis =1 )
 
 # def new centroid 
 def new_centroids(data, labels, k):
+  param = data.groupby(labels).apply(lambda x: np.exp(np.log(x).mean())).T
+  st.write("New Centroid : ",param)
   return   data.groupby(labels).apply(lambda x: np.exp(np.log(x).mean())).T
 
 
@@ -128,7 +129,7 @@ with tab1:
   st.subheader("Tahapan 2: Inisialisasi random centroid berdasarkan kolom masing - masing dan penentuan klaster")
   st.write(" Klaster = 3 ")
   centroids = random_centroids(data_standarized, 3)
-  st.write(centroids)
+  st.write("Centroid : ", centroids)
 
   st.subheader("Tahapan 3: Penentuan jarak dan label")
   labels = get_labels(data_standarized,centroids)
@@ -141,13 +142,16 @@ with tab1:
   k = 3
 
   centroids = random_centroids(data_standarized, k)
+  
   old_centroids = pd.DataFrame()
   iteration = 1
   # st.write(old_centroids)
 
   while iteration < max_iteration and not centroids.equals(old_centroids):
     st.write(f"Iterasi: {iteration}")
+    # st.write("Centroid in iteration : " ,centroids)
     old_centroids = centroids
+    st.write("Old centroid sebagai threshold", old_centroids)
 
     labels= get_labels(data_standarized, centroids)
     centroids = new_centroids(data_standarized, labels , k )
